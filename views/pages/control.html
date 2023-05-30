@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700;900&display=swap" rel="stylesheet">    
+    <link rel="stylesheet" href="css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="css/control.css">
+</head>
+<body>
+    <div class="nav">
+        <div class="nav_title">Панель управления</div>
+        <div class="menu">
+            <div class="menu_item"><a href="/admin/control">Товары</a></div>
+            <div class="menu_item"><a href="/admin/control/models">Модели</a></div>
+            <div class="menu_item"><a href="/admin/control/users">Пользователи</a></div>
+            <div class="menu_item"><a href="/admin/control/#">Заказы</a></div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="content_title">
+            Управление товарами
+        </div>
+        <div class="content_header">
+            <div class="content_header_sort_block">
+                Сортировать по <select>
+                    <option value="">названию</option>
+                    <option value="">названию</option>
+                    <option value="">производителю</option>
+                    <option value="">производителю</option>
+                </select>
+            </div>
+            <div class="content_header_search_block">
+                <div class="search_block_wrapper">
+                    <input type="text">
+                    <img src="images/search.png" alt="">
+                </div>
+                <button>Найти</button>
+            </div>
+            <div class="content_header_btn">
+                <button class="open_modal">
+                    Создать товар
+                </button>
+            </div>
+        </div>
+        <div class="content_main">
+            
+        </div>
+        <div class="modal hide">
+            <div class="modal_create_product hide">
+                <div class="modal_title">Создание товара</div>
+                <form name="create_product" class="modal_form">
+                    <label for="">Выберите модель</label>
+                    <select name="models" id="models"></select>
+                    <label for="">Выберите категорию товара</label>
+                    <select name="product_name" id="product_name">
+                        <option value="Смартфоны">Смартфоны</option>
+                        <option value="Смарт-часы и браслеты">Смарт-часы и браслеты</option>
+                        <option value="Защита и поддержка для смартфонов">Защита и поддержка для смартфонов</option>
+                        <option value="Зарядка и подключение для смартфонов">Зарядка и подключение для смартфонов</option>
+                    </select>
+                    <input type="text" name="price" placeholder="Цена">
+                    <input type="submit" name="submit">
+                </form>
+            </div>
+            <div class="modal_edit_product hide">
+                <input type="text" class="id" disabled>
+                <div class="modal_edit_product_block">
+                    Цена<br>
+                    <input type="text" class="newprice">    
+                </div>
+                <div class="modal_edit_product_block">
+                    Наличие<br>
+                    <input type="text" class="newamount">
+                </div>
+                <button class="save">Сохранить</button>
+            </div>
+
+        </div>
+    </div>
+    <script src="../js/control.js"></script>
+</body>
+</html>
