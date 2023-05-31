@@ -1,4 +1,5 @@
 const { Model } = require("../models/Model");
+const { Order } = require("../models/Order");
 const { Product } = require("../models/Product");
 const { User } = require("../models/User");
 
@@ -10,6 +11,9 @@ module.exports.models = function(_, response) {
 }
 module.exports.users = function(_,response) {
     response.sendFile('D:/Web/PhoneSalon/views/pages/users.html');
+}
+module.exports.orders = function (_,response) {
+    response.sendFile('D:/Web/PhoneSalon/views/pages/orders.html');
 }
 module.exports.postModel = async function(request, response) {
     const {name_model, parameters,img, producer} = request.body;
@@ -80,6 +84,45 @@ module.exports.deleteProduct = async function(request,response) {
 
 module.exports.getUsers = async function(request, response) {
     const users = await User.find();
-    console.log(users);
     response.send(users);
+}
+module.exports.deleteUser = async function(request, response) {
+    const id = request.params.id;
+    if(id == request.user.id) {
+        response.status(400).json({message: "Ошибка"});
+    } else {
+        const user = await User.deleteOne({_id: id});
+        if(user.deletedCount > 0) {
+            response.status(200).json({message: "Успешно"});
+        } else {
+            response.status(400).json({message: "Ошибка"});
+        }
+    }
+}
+module.exports.putUser = async function(request,response) {
+    const id = request.params.id;
+    console.log(id);
+    const {username,password,name,tel} = request.body;
+    const user = await User.updateOne({_id: id}, {username,password,name,tel});
+    if(user.modifiedCount > 0) {
+        response.status(200).json({message: "Успешно"});
+    } else {
+        response.status(400).json({message: "Ошибка"});
+    }
+}
+module.exports.getOrders = async function(request, response) {
+    const orders = await Order.find().populate('customer').populate({
+        path: 'products',
+        populate: 'model'
+    });
+    response.send(orders);
+}
+module.exports.putOrder = async function(request,response) {
+    const id = request.params.id;
+    const order = await Order.updateOne({_id: id}, {status: request.body.status});
+    if(order.modifiedCount > 0 ){
+        response.status(200).json({message:"Успешно"});
+    } else {
+        response.status(400).json({message: "Ошибка"});
+    }
 }

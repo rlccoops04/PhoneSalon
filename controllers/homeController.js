@@ -54,6 +54,7 @@ module.exports.postOrder = async (request, response) => {
         products.push(product);
     });
     const user = await User.findOne({_id: request.user.id});
+    console.log(products);
     const order = await Order.create({
         products,
         customer: user,

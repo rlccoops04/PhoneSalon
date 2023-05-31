@@ -16,7 +16,6 @@ function generateAccessToken(id, roles) {
 
 module.exports.registration = async (req,res) => {
     try {   
-        console.log(req.body);
         const {name, tel, username, password, role} = req.body;
         const candidate = await User.findOne({username: username});
         if(candidate) {

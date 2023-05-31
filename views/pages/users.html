@@ -20,7 +20,7 @@
             <div class="menu_item"><a href="/admin/control">Товары</a></div>
             <div class="menu_item"><a href="/admin/control/models">Модели</a></div>
             <div class="menu_item"><a href="/admin/control/users">Пользователи</a></div>
-            <div class="menu_item"><a href="/admin/control/#">Заказы</a></div>
+            <div class="menu_item"><a href="/admin/control/orders">Заказы</a></div>
         </div>
     </div>
     <div class="content">
@@ -29,19 +29,21 @@
         </div>
         <div class="content_header">
             <div class="content_header_sort_block">
-                Сортировать по <select>
-                    <option value="">названию</option>
-                    <option value="">названию</option>
-                    <option value="">производителю</option>
-                    <option value="">производителю</option>
+                Сортировать по <select class="sortby">
+                    <option value="loginup">↑логину</option>
+                    <option value="logindown">↓логину</option>
+                    <option value="fioup">↑ФИО</option>
+                    <option value="fiodown">↓ФИО</option>
+                    <option value="roleup">↑роли</option>
+                    <option value="roledown">↓роли</option>
                 </select>
             </div>
             <div class="content_header_search_block">
                 <div class="search_block_wrapper">
-                    <input type="text">
+                    <input type="text" class="search_input">
                     <img src="images/search.png" alt="">
                 </div>
-                <button>Найти</button>
+                <button class="btn_search">Найти</button>
             </div>
             <div class="content_header_btn">
                 <button class="open_modal">
@@ -63,24 +65,26 @@
         <div class="modal_create_user hide">
             <div class="modal_title">Регистрация</div>
             <form name="create_user" class="create_user_form">
-                <input type="text" class="create_user_input" name="username" placeholder="Логин">
-                <input type="text" class="create_user_input" name="password" placeholder="Пароль">
-                <input type="text" class="create_user_input" name="surname" placeholder="Фамилия">
-                <input type="text" class="create_user_input" name="name" placeholder="Имя">
-                <input type="text" class="create_user_input" name="patronymic" placeholder="Отчество">
-                <input type="text" class="create_user_input" name="tel" placeholder="Телефон">
+                <input type="text" name="username" placeholder="Логин">
+                <input type="text" name="password" placeholder="Пароль">
+                <input type="text" name="surname" placeholder="Фамилия">
+                <input type="text" name="name" placeholder="Имя">
+                <input type="text" name="patronymic" placeholder="Отчество">
+                <input type="text" name="tel" placeholder="Телефон">
+                <input type="submit" name="confirm">
             </form>
         </div>
         <div class="modal_edit_user hide">
-            <div class="modal_title">Изменение модели</div>
-            <form name="edit_model" class="edit_form">
-                <input type="text" name="id" disabled>
-                <input type="text" placeholder="Производитель" name="producer" required>
-                <input type="text" placeholder="Название модели" name="name_model" required>
-                <div class="parameters_block_edit">
-                </div>
-                <input type="submit" name="submit">
-            </form>
+            <div class="modal_title">Изменение</div>
+            <form name="edit_user" class="create_user_form">
+                <input type="text" name="username" placeholder="Логин">
+                <input type="text" name="password" placeholder="Пароль">
+                <input type="text" name="surname" placeholder="Фамилия">
+                <input type="text" name="name" placeholder="Имя">
+                <input type="text" name="patronymic" placeholder="Отчество">
+                <input type="text" name="tel" placeholder="Телефон">
+                <input type="submit" name="confirm">
+            </form>        
         </div>
     </div>
     <script src="../js/users.js"></script>

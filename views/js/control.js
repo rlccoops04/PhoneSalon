@@ -9,6 +9,24 @@ const modal = document.querySelector('.modal'),
       input_newamount = document.querySelector('.newamount'),
       save_btn = document.querySelector('.save'),
       content_main = document.querySelector('.content_main');
+async function AuthorizeStatus() {
+    const menu_items = document.querySelectorAll('.menu_item');
+    if(token) {
+        const response = await fetch('/get/user', {
+            method: "GET",
+            headers: {
+                'Accept-Type' : 'application/json',
+                'Authorization' : `Bearer ${token}`
+            }
+        });
+        const user = await response.json();
+        console.log(user);
+        if(user.roles[0] == 'Менеджер') {
+            menu_items[2].remove();
+        }
+    }
+}
+AuthorizeStatus();
 content_main.style.cssText = 'padding: 30px;display: flex;flex-wrap: wrap;'
 open_modal_btn.addEventListener('click', () => {
     modal.classList.remove('hide');
@@ -51,15 +69,9 @@ create_form.elements['submit'].addEventListener('click', async (e) => {
         const model = await response.json();
     }
 });
-async function start() {
-    const resp = await fetch('/admin/get/products', {
-        method: "GET",
-        headers: {
-            'Authorization' : `Bearer ${token}`,
-            'Accept-Type' : 'application/json'
-        }
-    });
-    const products = await resp.json();
+let products;
+function Show(products) {
+    content_main.innerHTML = '';
     products.forEach(product => {
         const block = document.createElement('div');
         const img = document.createElement('img');
@@ -101,6 +113,17 @@ async function start() {
         block.append(edit_btn);
         block.append(remove_btn);
     });
+}
+async function start() {
+    const resp = await fetch('/admin/get/products', {
+        method: "GET",
+        headers: {
+            'Authorization' : `Bearer ${token}`,
+            'Accept-Type' : 'application/json'
+        }
+    });
+    products = await resp.json();
+    Show(products);
     const response = await fetch('/admin/get/models', {
         method: "GET",
         headers: {
@@ -132,5 +155,48 @@ modal.addEventListener('click', (e) => {
         modal.classList.add('hide');
         modal_create_product.classList.add('hide');
         modal_edit_product.classList.add('hide');
+    }
+});
+
+const sortby = document.querySelector('.sortby');
+sortby.addEventListener('change', () => {
+    switch(sortby.value) {
+        case 'categoryup':
+            products.sort((a,b) => a.name > b.name ? 1 : -1);
+            break;
+        case 'categorydown':
+            products.sort((a,b) => a.name < b.name ? 1 : -1);
+            break;
+        case 'sumup':
+            products.sort((a,b) => Number(a.price) > Number(b.price) ? 1 : -1);
+            break;
+        case 'sumdown':
+            products.sort((a,b) => Number(a.price) < Number(b.price) ? 1 : -1);
+            break;
+        case 'amountup':
+            products.sort((a,b) => Number(a.available) > Number(b.available) ? 1 : -1);
+            break;
+        case 'amountdown':
+            products.sort((a,b) => Number(a.available) < Number(b.available) ? 1 : -1);
+            break;
+    }
+    Show(products);
+});
+const btn_search = document.querySelector('.btn_search'),
+      search_input = document.querySelector('.search_input');
+
+btn_search.addEventListener('click', () => {
+    const search = search_input.value;
+    if(search.length != 0) {
+        const searched = products.filter(
+            prod => 
+            prod.name.includes(search) ||
+            prod.price == search ||
+            prod.model.name_model == search ||
+            prod.model.producer == search
+        );
+        Show(searched);
+    } else {
+        Show(products);
     }
 });

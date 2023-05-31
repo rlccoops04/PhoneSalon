@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700;900&display=swap" rel="stylesheet">    
+    <link rel="stylesheet" href="css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="css/control.css">
+    <link rel="stylesheet" href="../css/models.css">
+    <link rel="stylesheet" href="css/users.css">
+</head>
+<body>
+    <div class="nav">
+        <div class="nav_title">Панель управления</div>
+        <div class="menu">
+            <div class="menu_item"><a href="/admin/control">Товары</a></div>
+            <div class="menu_item"><a href="/admin/control/models">Модели</a></div>
+            <div class="menu_item"><a href="/admin/control/users">Пользователи</a></div>
+            <div class="menu_item"><a href="/admin/control/orders">Заказы</a></div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="content_title">
+            Управление заявками
+        </div>
+        <div class="content_header">
+            <div class="content_header_sort_block">
+                Сортировать по <select class="sortby">
+                    <option value="customerup">↑заказчику</option>
+                    <option value="customerdown">↓заказчику</option>
+                    <option value="sumup">↑сумме</option>
+                    <option value="sumdown">↓сумме</option>
+                    <option value="statusup">↑статусу</option>
+                    <option value="statusdown">↓статусу</option>
+                </select>
+            </div>
+        </div>
+        <div class="content_main">
+            
+        </div>
+    </div>
+    <script src="../js/orders.js"></script>
+</body>
+</html>

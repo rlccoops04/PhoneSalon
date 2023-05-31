@@ -92,18 +92,9 @@ edit_model_form.elements['submit'].addEventListener('click', async (e) => {
 const content_main = document.querySelector('.content_main');
 content_main.style.cssText = 'padding: 30px;display: flex;flex-wrap: wrap;'
 let models;
-async function start() {
-    const response = await fetch('/admin/get/models', {
-        method: 'GET',
-        headers: {
-            'Accept-Type' : 'application/json',
-            'Authorization' : `Bearer ${token}`
-        }
-    });
-    models = await response.json();
-    console.log(models);
+function Show(models) {
+    content_main.innerHTML = '';
     models.forEach(model => {
-        console.log(model);
         const block = document.createElement('div');
         const img = document.createElement('img');
         img.src = model.img;
@@ -160,4 +151,68 @@ async function start() {
         content_main.append(block);
     });
 }
+async function start() {
+    const response = await fetch('/admin/get/models', {
+        method: 'GET',
+        headers: {
+            'Accept-Type' : 'application/json',
+            'Authorization' : `Bearer ${token}`
+        }
+    });
+    models = await response.json();
+    Show(models);
+}
 start();
+async function AuthorizeStatus() {
+    const menu_items = document.querySelectorAll('.menu_item');
+    if(token) {
+        const response = await fetch('/get/user', {
+            method: "GET",
+            headers: {
+                'Accept-Type' : 'application/json',
+                'Authorization' : `Bearer ${token}`
+            }
+        });
+        const user = await response.json();
+        console.log(user);
+        if(user.roles[0] == 'Менеджер') {
+            menu_items[2].remove();
+        }
+    }
+}
+AuthorizeStatus();
+
+const sortby = document.querySelector('.sortby');
+sortby.addEventListener('change', () => {
+    switch(sortby.value) {
+        case 'producerup':
+            models.sort((a,b) => a.producer > b.producer ? 1 : -1);
+            break;
+        case 'producerdown':
+            models.sort((a,b) => a.producer < b.producer ? 1 : -1);
+            break;
+        case 'modelup':
+            models.sort((a,b) => a.name_model > b.name_model ? 1 : -1);
+            break;
+        case 'modeldown':
+            models.sort((a,b) => a.name_model < b.name_model ? 1 : -1);
+            break;
+    }
+    Show(models);
+});
+const btn_search = document.querySelector('.btn_search'),
+      search_input = document.querySelector('.search_input');
+
+btn_search.addEventListener('click', () => {
+    const search = search_input.value;
+    if(search.length != 0) {
+        const searched = models.filter(
+            model => 
+            model.producer.includes(search) ||
+            model.name_model.includes(search)
+        );
+        Show(searched);
+    } else {
+        Show(models);
+    }
+});

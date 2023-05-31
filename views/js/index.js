@@ -5,7 +5,6 @@ const open_catalog_btn = document.querySelector('.open_catalog'),
       modal = document.querySelector('.modal'),
       token = localStorage.getItem('token'),
       new_block = document.querySelector('.main_block_news'),
-      top_block = document.querySelector('.main_block_topsells'),
       basket_length = document.querySelector('.basket_length'),
       register_form = document.forms['register_form'],
       login_form = document.forms['login_form'];
@@ -91,7 +90,7 @@ async function AuthorizeStatus() {
                 location.reload();
             });
             const user = await response.json();
-            if(user.roles[0] == 'Администратор') {
+            if(user.roles[0] == 'Администратор' || user.roles[0] == 'Менеджер') {
                 const redirect_btn = document.createElement('a');
                 const menu = document.querySelector('.header_menu');
                 redirect_btn.innerText = 'Панель управления';

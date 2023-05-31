@@ -18,7 +18,7 @@
             <div class="menu_item"><a href="/admin/control">Товары</a></div>
             <div class="menu_item"><a href="/admin/control/models">Модели</a></div>
             <div class="menu_item"><a href="/admin/control/users">Пользователи</a></div>
-            <div class="menu_item"><a href="/admin/control/#">Заказы</a></div>
+            <div class="menu_item"><a href="/admin/control/orders">Заказы</a></div>
         </div>
     </div>
     <div class="content">
@@ -27,19 +27,21 @@
         </div>
         <div class="content_header">
             <div class="content_header_sort_block">
-                Сортировать по <select>
-                    <option value="">названию</option>
-                    <option value="">названию</option>
-                    <option value="">производителю</option>
-                    <option value="">производителю</option>
+                Сортировать по <select class="sortby">
+                    <option value="categoryup">↑категории</option>
+                    <option value="categorydown">↓категории</option>
+                    <option value="sumup">↑цене</option>
+                    <option value="sumdown">↓цене</option>
+                    <option value="amountup">↑наличию</option>
+                    <option value="amountdown">↓наличию</option>
                 </select>
             </div>
             <div class="content_header_search_block">
                 <div class="search_block_wrapper">
-                    <input type="text">
+                    <input type="text" class="search_input">
                     <img src="images/search.png" alt="">
                 </div>
-                <button>Найти</button>
+                <button class="btn_search">Найти</button>
             </div>
             <div class="content_header_btn">
                 <button class="open_modal">
