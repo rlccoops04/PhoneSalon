@@ -7,6 +7,10 @@ const open_catalog_btn = document.querySelector('.open_catalog'),
       new_block = document.querySelector('.main_block_news'),
       basket_length = document.querySelector('.basket_length'),
       register_form = document.forms['register_form'],
+      main_block_img = document.querySelector('.main_block_img'),
+      main_block_content_name = document.querySelector('.main_block_content_name'),
+      main_block_content_harakt = document.querySelector('.main_block_content_harakt'),
+      main_block_content_price = document.querySelector('.main_block_content_price'),
       login_form = document.forms['login_form'];
 let basket = sessionStorage.getItem('basket');
 if(basket) {
@@ -83,13 +87,6 @@ async function AuthorizeStatus() {
             }
         });
         if(response.ok) {
-            const profile_btn = document.createElement('button');
-            profile_btn.style.cssText = 'margin-right: 10px;width: 80px;';
-            profile_btn.innerText = 'Профиль';
-            profile_btn.addEventListener('click', () => {
-                window.location.href = '/profile';
-            });
-            login_btn.before(profile_btn);
             login_btn.innerText = 'Выход';
             login_btn.addEventListener('click', () => {
                 localStorage.removeItem('token');
@@ -123,106 +120,87 @@ async function AuthorizeStatus() {
 }
 
 AuthorizeStatus();
-let products;
-function Show(newproducts) {
-    new_block.innerHTML = ``;
-    newproducts.forEach(product => {
-        const block = document.createElement('div');
-        block.style.cssText = 'width: 290px;min-height: 400px;border: 0.5px solid rgb(230,230,230);padding: 20px;padding-bottom:50px;border-right: none;border-bottom:none;';
-        block.addEventListener('mouseenter', () => {
-            block.style.cssText = 'width: 290px;min-height: 400px;border: 0.5px solid rgb(230,230,230);padding: 20px;box-shadow: 5px 5px 10px gray;padding-bottom:50px;border-right: none;border-bottom:none;cursor: pointer;';
-        });
-        block.addEventListener('mouseleave', () => {
-            block.style.cssText = 'width: 290px;min-height:400px;border: 0.5px solid rgb(230,230,230);padding: 20px;padding-bottom:50px;border-right: none;border-bottom:none';
-        });
-
-        const img = document.createElement('img');
-        img.style.cssText = 'display:block;height: 250px;margin:0 auto 20px auto;';
-        img.src = product.model.img;
-        block.append(img);
-        block.innerHTML += `<span style='font-size: 14px;color:rgb(170,170,170);'>${product.name}</span><br>${product.model.producer} ${product.model.name_model} `;
-        const price_block = document.createElement('div');
-        price_block.style.cssText = 'margin-top: 20px;font-weight: 700;font-size: 20px;position:relative;'
-        let price = Number(product.price);
-        price = price.toLocaleString('ru-RU');
-        price_block.innerText = price + ' ₽';
-        block.append(price_block);
-        const buy_btn = document.createElement('button');
-        buy_btn.style.cssText = 'border:none;background-color: rgb(255, 196, 0);color: purple;font-weight: 700;border-radius: 5px;position: absolute;right:0;bottom:0';
-        if(basket) {
-            if(basket.includes(product._id)) {
-                buy_btn.innerText = 'В корзине';
-                buy_btn.addEventListener('click', () => {
-                    let prods = JSON.parse(basket);
-                    for(let i = 0; i< prods.length; i++) {
-                        if(prods[i] == product._id) {
-                            prods.splice(i,1);
-                            sessionStorage.setItem('basket', JSON.stringify(prods));
-                        }
-                    }
-                    buy_btn.innerText = 'Купить';
-                    basket = sessionStorage.getItem('basket');
-                    basket_length.innerText = JSON.parse(basket).length;
-                    buy_btn.setAttribute('disabled','');
-                });
-            } else {
-                buy_btn.innerText = 'Купить';
-                buy_btn.addEventListener('click', () => {
-                    if(basket) {
-                        let prods = JSON.parse(basket);
-                        prods.push(product._id);
-                        sessionStorage.setItem('basket', JSON.stringify(prods));
-                    } else {
-                        let prods = [];
-                        prods.push(product._id);
-                        sessionStorage.setItem('basket', JSON.stringify(prods));
-                    }
-                    buy_btn.innerText = 'В корзине';
-                    basket = sessionStorage.getItem('basket');
-                    basket_length.innerText = JSON.parse(basket).length;
-                    buy_btn.setAttribute('disabled','');
-                });
-        
-            }
-    
-        } else {
-            buy_btn.innerText = 'Купить';
-                buy_btn.addEventListener('click', () => {
-                    if(basket) {
-                        let prods = JSON.parse(basket);
-                        prods.push(product._id);
-                        sessionStorage.setItem('basket', JSON.stringify(prods));
-                    } else {
-                        let prods = [];
-                        prods.push(product._id);
-                        sessionStorage.setItem('basket', JSON.stringify(prods));
-                    }
-                    buy_btn.innerText = 'В корзине';
-                    basket = sessionStorage.getItem('basket');
-                    basket_length.innerText = JSON.parse(basket).length;
-                    buy_btn.setAttribute('disabled','');
-                });
-        }
-        price_block.append(buy_btn);
-        new_block.append(block);
-        block.addEventListener('click', (e) => {
-            if(e.target != buy_btn) {
-                window.location.href = '/product/' + product._id;
-            }
-        });
-    });
-}
+let product;
 async function start() {
-    const response = await fetch('/get/products', {
-        method: "GET",
+    const response = await fetch('/get/product/' + window.location.pathname.split('/')[2]   , {
+        method: 'GET',
         headers: {
             'Authorization' : `Bearer ${token}`,
             'Accept-Type' : 'application/json'
         }
+    })
+    product = await response.json();
+    const img = document.createElement('img');
+    img.src = product.model.img;
+    img.style.cssText = 'height: 450px;';
+    main_block_img.append(img);
+    main_block_content_name.innerHTML = `<span style='font-size:13px;color:gray'>${product.name}</span><br>${product.model.producer} ${product.model.name_model}<br><br>Характеристики:`;
+    product.model.parameters.forEach(parameter => {
+        main_block_content_name.innerHTML += `${parameter.parameter_name}: ${parameter.parameter_value}<br>`;
     });
-    products = await response.json();
-    const newproducts = [products[products.length - 1], products[products.length - 2], products[products.length - 3], products[products.length - 4], products[products.length - 5], ];
-    Show(newproducts);
+    const price_block = document.createElement('div');
+    price_block.style.cssText = 'margin-top: 200px;font-weight: 700;font-size: 20px;position:relative;'
+    let price = Number(product.price);
+    price = price.toLocaleString('ru-RU');
+    price_block.innerText = price + ' ₽';
+    main_block_content_name.append(price_block);
+    const buy_btn = document.createElement('button');
+    buy_btn.style.cssText = 'border:none;background-color: rgb(255, 196, 0);color: purple;font-weight: 700;border-radius: 5px;position: absolute;right:0;bottom:0';
+    if(basket) {
+        if(basket.includes(product._id)) {
+            buy_btn.innerText = 'В корзине';
+            buy_btn.addEventListener('click', () => {
+                let prods = JSON.parse(basket);
+                for(let i = 0; i< prods.length; i++) {
+                    if(prods[i] == product._id) {
+                        prods.splice(i,1);
+                        sessionStorage.setItem('basket', JSON.stringify(prods));
+                    }
+                }
+                buy_btn.innerText = 'Купить';
+                basket = sessionStorage.getItem('basket');
+                basket_length.innerText = JSON.parse(basket).length;
+                buy_btn.setAttribute('disabled','');
+            });
+        } else {
+            buy_btn.innerText = 'Купить';
+            buy_btn.addEventListener('click', () => {
+                if(basket) {
+                    let prods = JSON.parse(basket);
+                    prods.push(product._id);
+                    sessionStorage.setItem('basket', JSON.stringify(prods));
+                } else {
+                    let prods = [];
+                    prods.push(product._id);
+                    sessionStorage.setItem('basket', JSON.stringify(prods));
+                }
+                buy_btn.innerText = 'В корзине';
+                basket = sessionStorage.getItem('basket');
+                basket_length.innerText = JSON.parse(basket).length;
+                buy_btn.setAttribute('disabled','');
+            });
+    
+        }
+
+    } else {
+        buy_btn.innerText = 'Купить';
+            buy_btn.addEventListener('click', () => {
+                if(basket) {
+                    let prods = JSON.parse(basket);
+                    prods.push(product._id);
+                    sessionStorage.setItem('basket', JSON.stringify(prods));
+                } else {
+                    let prods = [];
+                    prods.push(product._id);
+                    sessionStorage.setItem('basket', JSON.stringify(prods));
+                }
+                buy_btn.innerText = 'В корзине';
+                basket = sessionStorage.getItem('basket');
+                basket_length.innerText = JSON.parse(basket).length;
+                buy_btn.setAttribute('disabled','');
+            });
+    }
+    price_block.append(buy_btn);
 }
 start();
 
@@ -261,7 +239,8 @@ search_btn.addEventListener('click', () => {
             prod.name.includes(search) ||
             prod.model.name_model.includes(search) ||
             prod.model.producer.includes(search) ||
-
+            search.includes(prod.model.name_model) ||
+            search.includes(prod.model.producer) ||
             search == `${prod.model.producer} ${prod.model.name_model}`);
         Show(newproducts);
     } else {

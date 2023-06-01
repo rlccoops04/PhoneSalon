@@ -119,9 +119,7 @@ function ShowPhones(smartphones) {
         block.addEventListener('mouseleave', () => {
             block.style.boxShadow = 'none';
         });
-        // block.addEventListener('click', () => {
-        //     window.location.href = `/catalog/smartphones/${product._id}`;
-        // });
+
         const img = document.createElement('img');
         img.style.cssText = 'display:block;height: 250px;margin:0 auto 20px auto;';
         img.src = product.model.img;
@@ -188,6 +186,11 @@ function ShowPhones(smartphones) {
         }
         price_block.append(buy_btn);
         content.append(block);
+        block.addEventListener('click', (e) => {
+            if(e.target != buy_btn) {
+                window.location.href = `/product/${product._id}`;
+            }
+        });
     });
 }
 let searched = [];

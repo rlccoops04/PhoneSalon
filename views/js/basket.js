@@ -119,6 +119,15 @@ function ShowCurrent() {
         title.innerHTML = 'Корзина пуста';
     } else {
         title.innerHTML = 'Ваша корзина';
+        const confirm_block = document.createElement('div');
+        confirm_block.style.cssText = 'width: 1000px;height: 100px;border-top: 1px solid gray;display:flex;align-items:center;margin-top:30px;';
+        const summary = document.createElement('div');
+        confirm_block.append(summary);
+        const confirm_btn = document.createElement('button');
+        confirm_btn.innerText = 'Оформить заказ';
+        confirm_btn.style.cssText = 'height: 50px;width: 250px;border:none;border-radius: 5px;background-color: green;color:white;';
+        confirm_block.append(confirm_btn);
+
         prods.forEach(prod => {
             const block = document.createElement('div');
             block.style.cssText = 'display: flex;margin-top:30px;';
@@ -138,9 +147,29 @@ function ShowCurrent() {
             if(Number(prod.available) != 0) {
                 strip.style.backgroundColor = 'green';
                 block_name.innerHTML += '<span style=`display:block;margin-left:10px;`>Товар в наличии</span>';
+                confirm_block.addEventListener('click', async () => {
+                    const response = await fetch('/post/order', {
+                        method: "POST",
+                        headers: {
+                            'Authorization' : `Bearer ${token}`,
+                            'Content-Type' : 'application/json'
+                        },
+                        body: JSON.stringify({basket})
+                    });
+                    const order = await response.json();
+                    if(response.ok) {
+                        sessionStorage.removeItem('basket');
+                        window.location.href = '/';
+                    }
+                    console.log(order);
+                });
+        
             } else {
                 strip.style.backgroundColor = 'red';
                 block_name.innerHTML += '<span style=`display:block;margin-left:10px;`>Товара нет в наличии</span>';
+                confirm_btn.setAttribute('disabled', '');
+                confirm_btn.style.background = 'red';
+                
             }
             block_name.style.cssText += 'width: 700px;'
             block.append(block_name);
@@ -149,36 +178,26 @@ function ShowCurrent() {
             sum += price;
             price = price.toLocaleString('ru-RU');
             price_block.innerText = price + ' ₽';
-            price_block.style.cssText = 'display:flex;justify-content:center;align-items:center;font-weight:700;font-size:20px;';
+            const remove_btn = document.createElement('button');
+            remove_btn.innerText = 'Удалить';
+            remove_btn.style.cssText = 'border:none;border-radius:5px;background-color: red;color:white;font-size: 14px;';
+            remove_btn.addEventListener('click', () => {
+                let prods = JSON.parse(basket);
+                for(let i = 0; i< prods.length; i++) {
+                    if(prods[i] == prod._id) {
+                        prods.splice(i,1);
+                        sessionStorage.setItem('basket', JSON.stringify(prods));
+                    }
+                }
+                window.location.reload();
+            });
+            price_block.append(remove_btn);
+            summary.innerText = `Итого к оплате: ${sum} ₽`;
+            summary.style.cssText = 'width: 700px;height: 100px;font-size: 22px;font-weight: 500;display:flex;align-items:center;padding-left: 50px;';    
+            price_block.style.cssText = 'display:flex;flex-direction:column;justify-content:center;align-items:center;font-weight:700;font-size:20px;';
             block.append(price_block);
             content.append(block);
         });
-        const confirm_block = document.createElement('div');
-        confirm_block.style.cssText = 'width: 1000px;height: 100px;border-top: 1px solid gray;display:flex;align-items:center;margin-top:30px;';
-        const summary = document.createElement('div');
-        summary.innerText = `Итого к оплате: ${sum} ₽`;
-        summary.style.cssText = 'width: 700px;height: 100px;font-size: 22px;font-weight: 500;display:flex;align-items:center;padding-left: 50px;';
-        confirm_block.append(summary);
-        const confirm_btn = document.createElement('button');
-        confirm_btn.innerText = 'Оформить заказ';
-        confirm_btn.style.cssText = 'height: 50px;width: 250px;border:none;border-radius: 5px;background-color: green;color:white;';
-        confirm_block.addEventListener('click', async () => {
-            const response = await fetch('/post/order', {
-                method: "POST",
-                headers: {
-                    'Authorization' : `Bearer ${token}`,
-                    'Content-Type' : 'application/json'
-                },
-                body: JSON.stringify({basket})
-            });
-            const order = await response.json();
-            if(response.ok) {
-                sessionStorage.removeItem('basket');
-                window.location.href = '/';
-            }
-            console.log(order);
-        });
-        confirm_block.append(confirm_btn);
         content.append(confirm_block);    
     }
 }

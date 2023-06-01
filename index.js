@@ -25,6 +25,7 @@ app.use('/catalog',express.static(__dirname + '/views'));
 app.use(jsonParser);
 app.use('/admin/',express.static(__dirname + '/views'));
 app.use('/admin/control',express.static(__dirname + '/views'));
+app.use('/product',express.static(__dirname + '/views'));
 
 app.use('/admin/control',express.static(__dirname + '/views'));
 

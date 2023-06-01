@@ -10,6 +10,7 @@ header {
 }
 .main_block_news {
     display: flex;
+    flex-wrap: wrap;
     margin-top: 20px;
 }
 
@@ -121,7 +122,8 @@ header {
     width: 99%;
 }
 .subheader_lk {
-    margin-left: 90px;
+    margin-left: 150px;
+    display: flex;
 }
 .subheader_favorites {
     margin-left: 30px;

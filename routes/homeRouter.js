@@ -8,9 +8,14 @@ homeRouter.get('/catalog/watches', homeController.watches);
 homeRouter.get('/catalog/accessories', homeController.accessories);
 homeRouter.get('/catalog/rechargers', homeController.rechargers);
 homeRouter.get('/basket', homeController.basket);
+homeRouter.get('/product/:id', homeController.product);
+homeRouter.get('/profile', homeController.profile);
 
 homeRouter.get('/get/user',authMiddleware(['Пользователь', 'Администратор', 'Менеджер']), homeController.getUser);
+homeRouter.put('/put/user', authMiddleware(['Пользователь', 'Администратор', 'Менеджер']), homeController.putUser);
 homeRouter.get('/get/products', homeController.getProducts);
+homeRouter.get('/get/product/:id', homeController.getProduct);
+
 homeRouter.get('/get/products/smartphones', homeController.getSmartphones);
 homeRouter.get('/get/products/watches', homeController.getWatches);
 homeRouter.get('/get/products/accessories', homeController.getAccessories);

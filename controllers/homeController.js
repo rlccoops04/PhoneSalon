@@ -21,12 +21,35 @@ module.exports.rechargers = (_, response) => {
 module.exports.basket = (_, response) => {
     response.sendFile('D:/Web/PhoneSalon/views/pages/basket.html');
 }
+module.exports.product = (_,response) => {
+    response.sendFile('D:/Web/PhoneSalon/views/pages/product.html');
+}
+module.exports.profile = (_,response) => {
+    response.sendFile('D:/Web/PhoneSalon/views/pages/profile.html');
+}
 module.exports.getUser = async (request, response) => {
-    response.json(request.user);
+    const user = await User.findOne({_id: request.user.id});
+    response.json(user);
+}
+module.exports.putUser = async (request, response) => {
+    const id = request.user.id
+    const {username, password, name, tel} = request.body;
+    const user = await User.updateOne({_id:id}, {username, password, name, tel});
+    if(user.modifiedCount > 0) {
+        response.status(200).json({message: "Успешно"});
+    } else {
+        response.status(400).json({message: "Ошибка"});
+
+    }
 }
 module.exports.getProducts = async (request, response) => {
     const products = await Product.find().populate('model');
     response.send(products);
+}
+module.exports.getProduct = async (request, response) => {
+    const id = request.params.id;
+    const product = await Product.findOne({_id:id}).populate('model');
+    response.send(product);
 }
 module.exports.getSmartphones = async (request, response) => {
     const products = await Product.find({name: 'Смартфоны'}).populate('model');
